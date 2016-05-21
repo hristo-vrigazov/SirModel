@@ -14,7 +14,7 @@ turtles-own [
 ]
 
 to initialize-globals
-  set too-many-people-threshold 300
+  set too-many-people-threshold 10000
   set initial-turtles 150
   ask patches [set pcolor white]
 end
@@ -23,7 +23,7 @@ to initialize-people
   create-turtles initial-turtles [ setxy random-xcor random-ycor ]
   ask turtles [set shape "person"]
   ask turtles [set energy generate-initial-energy]
-  ask turtles [set label-color black]
+  ask turtles [set label-color green]
   ask turtles [
     suscept
 
@@ -95,7 +95,9 @@ to infect-close-people
   ask turtles [
     if infected? [
       ask turtles-here [
-        infect
+        if not susceptible? [
+          infect
+        ]
       ]
     ]
   ]
@@ -298,13 +300,13 @@ NIL
 1
 
 SWITCH
-5
-185
-132
-218
+6
+268
+133
+301
 show-life?
 show-life?
-1
+0
 1
 -1000
 
@@ -347,10 +349,10 @@ PENS
 "recovered" 1.0 0 -14439633 true "" "plot count turtles with [recovered? = true]"
 
 SWITCH
-5
-226
-132
-259
+220
+397
+347
+430
 birth-infect?
 birth-infect?
 0
@@ -381,20 +383,20 @@ aging-coefficient
 aging-coefficient
 0
 100
-17
+48
 1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-7
-142
-131
-175
+223
+358
+347
+391
 medicine?
 medicine?
-0
+1
 1
 -1000
 
@@ -422,7 +424,7 @@ initial-recovered-percentage
 initial-recovered-percentage
 0
 100
-15
+23
 1
 1
 NIL
