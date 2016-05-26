@@ -45,7 +45,7 @@ end
 to setup
   clear-all
   initialize-globals
-  color-borders
+  ;color-borders
   initialize-people
   reset-ticks
 end
@@ -54,7 +54,7 @@ to go
   check-if-should-continue
   move-people
   heal-or-die
-  find-infected
+  ;find-infected
   infect-close-people
   check-death
   new-children
@@ -92,12 +92,21 @@ to heal-or-die
 end
 
 to infect-close-people
-  ask turtles [
-    if infected? [
-      ask turtles-here [
-        if not susceptible? [
-          infect
-        ]
+;  ask turtles [
+;    if infected? [
+;      ask turtles-here [
+;        if not susceptible? [
+;          infect
+;        ]
+;      ]
+;    ]
+;  ]
+
+  ask turtles with [infected? = true] [
+    let my-neighbors (other turtles) in-radius 1
+    ask my-neighbors [
+      if not recovered? [
+        infect
       ]
     ]
   ]
@@ -118,9 +127,6 @@ to new-children
       let parent-infected? infected?
       hatch (random 3) [
         suscept
-        if birth-infect? and parent-infected? [
-          infect
-        ]
         set energy 100
           ]]
   ]
@@ -137,16 +143,13 @@ end
 
 ; returns true with prob percentage
 to-report probability [prob]
-  report (random 100) <= prob
+  report (random 100) < prob
 end
 
 to move-people
   ask turtles [
     right random 360
     forward 1
-    if susceptible? [
-      set energy energy - 1
-    ]
     set energy energy - random aging-coefficient
     ifelse show-life?
     [ set label 100 - energy ]
@@ -306,7 +309,7 @@ SWITCH
 301
 show-life?
 show-life?
-0
+1
 1
 -1000
 
@@ -348,17 +351,6 @@ PENS
 "infected" 1.0 0 -2674135 true "" "plot count turtles with [infected? = true]"
 "recovered" 1.0 0 -14439633 true "" "plot count turtles with [recovered? = true]"
 
-SWITCH
-220
-460
-347
-493
-birth-infect?
-birth-infect?
-0
-1
--1000
-
 SLIDER
 146
 140
@@ -368,7 +360,7 @@ birth-probability
 birth-probability
 0
 100
-14
+2
 1
 1
 NIL
@@ -383,7 +375,7 @@ aging-coefficient
 aging-coefficient
 0
 100
-41
+5
 1
 1
 NIL
@@ -396,7 +388,7 @@ SWITCH
 454
 medicine?
 medicine?
-0
+1
 1
 -1000
 
@@ -409,7 +401,7 @@ initial-infected-percentage
 initial-infected-percentage
 0
 100
-12
+1
 1
 1
 NIL
@@ -424,7 +416,7 @@ initial-recovered-percentage
 initial-recovered-percentage
 0
 100
-23
+0
 1
 1
 NIL
@@ -439,7 +431,7 @@ infect-die-rate
 infect-die-rate
 0
 100
-33
+0
 1
 1
 NIL
@@ -454,7 +446,7 @@ medicine-efficiency
 medicine-efficiency
 0
 100
-29
+14
 1
 1
 NIL
@@ -463,7 +455,12 @@ HORIZONTAL
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+The model is a generalization of a traditional SIR model.
+The population is divided into three groups:
+S - susceptible, people who can get infected, and have no immunity
+I - infected, people who are infected, they can either recover or die
+R - recovered, they can no longer get infected; they can only die from
+natural causes
 
 ## HOW IT WORKS
 
