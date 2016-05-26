@@ -10,6 +10,7 @@ class Model:
         self.r_init = r_init
         self.alpha = alpha
         self.beta = beta
+        self.prob_revert = 0.03
         self.max_iter = 1000
         self.time_unit = 1
         self.basic_reproduction = None
@@ -32,7 +33,9 @@ class Model:
             if I[time] + s_to_i - i_to_r < 0:
                 i_to_r = I[time] + s_to_i
 
-            S.append(S[time] - s_to_i)
+            r_to_s = R[time] * self.prob_revert
+
+            S.append(S[time] - s_to_i + r_to_s)
             I.append(I[time] + s_to_i - i_to_r)
             R.append(total_num_people - (S[time] + I[time]))
             time += 1
@@ -44,24 +47,24 @@ class Utils:
 
     eps = 0.001
 
-    @staticmethod
-    def derive(func):
-        return lambda x: (func(x + Utils.eps) - func(x)) / Utils.eps
+    @classmethod
+    def derive(cls, func):
+        return lambda x: (func(x + cls.eps) - func(x)) / cls.eps
 
     @staticmethod
     def rss(actual, expected):
         return sum((act - exp) ** 2 for act, exp in zip(actual, expected))
 
-    @staticmethod
-    def rss_sum(model_data, exp_data):
-        return sum(Utils.rss(model_set, exp_set)
+    @classmethod
+    def rss_sum(cls, model_data, exp_data):
+        return sum(cls.rss(model_set, exp_set)
                    for model_set, exp_set in zip(model_data, exp_data))
 
-    @staticmethod
-    def get_quality_metric(model, exp_data, var_name):
+    @classmethod
+    def get_quality_metric(cls, model, exp_data, var_name):
         def quality_metric(var_val):
             setattr(model, var_name, var_val)
-            return Utils.rss_sum(model.run(), exp_data)
+            return cls.rss_sum(model.run(), exp_data)
 
         return quality_metric
 

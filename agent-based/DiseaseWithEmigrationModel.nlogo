@@ -54,7 +54,7 @@ to go
   check-if-should-continue
   move-people
   heal-or-die
-  find-infected
+  ;find-infected
   infect-close-people
   check-death
   new-children
