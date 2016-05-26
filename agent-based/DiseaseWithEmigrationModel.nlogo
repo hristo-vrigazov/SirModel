@@ -54,7 +54,7 @@ to go
   check-if-should-continue
   move-people
   heal-or-die
-  ;find-infected
+  find-infected
   infect-close-people
   check-death
   new-children
@@ -64,7 +64,7 @@ end
 
 to apply-vaccine
   ask turtles [
-    if infected? and medicine? and probability 40 [
+    if infected? and medicine? and probability medicine-efficiency [
       recover
     ]
   ]
@@ -350,9 +350,9 @@ PENS
 
 SWITCH
 220
-397
+460
 347
-430
+493
 birth-infect?
 birth-infect?
 0
@@ -368,7 +368,7 @@ birth-probability
 birth-probability
 0
 100
-13
+14
 1
 1
 NIL
@@ -383,7 +383,7 @@ aging-coefficient
 aging-coefficient
 0
 100
-48
+41
 1
 1
 NIL
@@ -391,12 +391,12 @@ HORIZONTAL
 
 SWITCH
 223
-358
+421
 347
-391
+454
 medicine?
 medicine?
-1
+0
 1
 -1000
 
@@ -440,6 +440,21 @@ infect-die-rate
 0
 100
 33
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+142
+363
+349
+396
+medicine-efficiency
+medicine-efficiency
+0
+100
+29
 1
 1
 NIL
